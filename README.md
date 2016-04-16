@@ -57,7 +57,8 @@ class ICMPClient(AbstractClient):
         sock.sendto(data, (self.forward_addr, sock.proto))
 
 ```
-You can also override the ```on_receive(sock)``` method in order to implement your own protocol serialization logic.
+You can also override the ```on_receive(sock)``` method in order to implement your own socket reading logic, it's super simple. 
+take a look at the ```TCPServer``` or ```HTTPServer``` classes for example.
 
 Simple, elegant, effective.
 
