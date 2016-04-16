@@ -3,7 +3,7 @@
 PyLmany is a many-to-many protocol proxy framework for Python (and also a tasty Russian dumpling).
 
 ### Basic Usage
-All you have to do is instanciate a protocol 'Client' instance and give that instance to a protocol 'Server' instance. Pylmany will use the 'server' instance to listen for incomming connections and then forward them to the desired destination using the 'client' instance.
+All you have to do is instanciate a protocol ```Client``` instance and give that instance to a protocol ```Server``` instance. Pylmany will use the ```Server``` instance to listen for incomming connections and then forward them to the desired destination using the ```Client``` instance that is tied to the server.
 
 ```
 from Clients.UDPClient import UDPClient
@@ -13,8 +13,9 @@ client = UDPClient('8.8.8.8', 53) # tell pylmany to forward data to 8.8.8.8 on U
 server = TCPServer(client, listen_addr='0.0.0.0', listen_port=8080) # tell pylmany to listen on TCP port 8080
 ```
 
-You can also create a custom instance of Client and Server in order to get the change to manipulate the data before its sent/returned.
-All you have to do is inherit the Client/Server class and override the ```before_send(data)``` or ```before_respond(data)``` methods in order to return a modified instance of the data object:
+You can also create a custom subclass of ```Client``` or ```Server``` in order to get the change to manipulate the data before its forwarded/returned by pylmany.
+
+All you have to do is inherit from the appropriate ```Client```/```Server``` class and then override the ```before_send(data)``` or ```before_respond(data)``` methods in order to return a modified instance of the data object to pylmany's processing pipeline.
 
 ```
 from Clients.HTTPClient import HTTPClient, HTTPRequest
@@ -40,7 +41,8 @@ server = MyTCPServer(client) # default listen port is 8080
 ```
 
 ### Hacking
-You can even implement your own network protocols in PyLmany, all you need to do is to iherit from the ```AbstractClient``` or ```AbstractServer``` class and implement two abstract methods, the ```initialize``` method which needs to instanciate a socket object and save it in ```self.socket``` and a ```protocol_send(data, sock)``` method to tell PyLmany how the data should be sent to the server via the socket. an example ```ICMPClient``` class could be something like:
+You can even implement your own network protocols for pylmany. All you need to do is to iherit from the ```AbstractClient``` or ```AbstractServer``` class and implement two abstract methods: the ```initialize``` method which needs to instanciate a socket object and save it in ```self.socket``` and the ```protocol_send(data, sock)``` method to tell pylmany how the data should be sent to the destination via the socket. 
+an example ```ICMPClient``` class could look a little something like:
 
 ```
 from Clients.AbstractClient import AbstractClient
