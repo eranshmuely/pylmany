@@ -1,20 +1,20 @@
 # PyLmany
 
-PyLmany is a many-to-many protocol proxy framework for Python. (and also a tasty russian dumpling)
+PyLmany is a many-to-many protocol proxy framework for Python (and also a tasty Russian dumpling).
 
-### Basic Uasage
-All you have to do is instanciate a protocol 'Client' instance and give that instance to a protocol 'Server' instance.
+### Basic Usage
+All you have to do is instanciate a protocol 'Client' instance and give that instance to a protocol 'Server' instance. Pylmany will use the 'server' instance to listen for incomming connections and then forward them to the desired destination using the 'client' instance.
 
 ```
 from Clients.UDPClient import UDPClient
 from Servers.TCPServer import TCPServer
 
-client = UDPClient('8.8.8.8', 53)
-server = TCPServer(client)
+client = UDPClient('8.8.8.8', 53) # tell pylmany to forward data to 8.8.8.8 on UDP 53
+server = TCPServer(client, listen_addr='0.0.0.0', listen_port=8080) # tell pylmany to listen on TCP port 8080
 ```
 
 You can also create a custom instance of Client and Server in order to get the change to manipulate the data before its sent/returned.
-All you have to do is inherit the Client/Server class and override the ```before_send(data)``` or ```before_respond(data)``` methods and return a modified data object:
+All you have to do is inherit the Client/Server class and override the ```before_send(data)``` or ```before_respond(data)``` methods in order to return a modified instance of the data object:
 
 ```
 from Clients.HTTPClient import HTTPClient, HTTPRequest
@@ -33,7 +33,7 @@ class MyTCPServer(TCPServer):
         return data.upper()
 
 client = MyHTTPClient('www.example.com', 80)
-server = MyTCPServer(client)
+server = MyTCPServer(client) # default listen port is 8080
 
 ```
 
@@ -58,7 +58,6 @@ class ICMPClient(AbstractClient):
 You can also override the ```on_receive(sock)``` method in order to implement your own protocol serialization logic.
 
 Simple, elegant, effective.
-
 
 
 License
