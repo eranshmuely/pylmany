@@ -19,12 +19,14 @@ All you have to do is inherit the Client/Server class and override the ```before
 ```
 from Clients.HTTPClient import HTTPClient, HTTPRequest
 from Server.UDPServer import UDPServer
+import json
 
 class MyHTTPClient(HTTPClient):
     def before_send(req):
         """ :type data HTTPRequest """
-        req.add_header('some-header': 'some-value')
-        req.body = req.body
+        req.add_header('content-type': 'application/json')
+        req.method = 'PUT'
+        req.body = json.dumps({'user_data': req.body.lower()})
         return req
 
 class MyTCPServer(TCPServer):
